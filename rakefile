@@ -1,6 +1,8 @@
 desc "mirror to jquery svn repository"
 task :mirror do
-  name = File.basename(Dir.pwd).gsub(/[^-]+-/,'')
+  name = File.basename(Dir.pwd).gsub(/[^-]+-/,'').gsub(/(^uitable)(.)/) do
+    "uiTable#{$2.upcase}"
+  end
   svn_dir = "/home/greg/js/trunk/plugins/#{name}/"
   `cp -R * #{svn_dir}`
 
