@@ -8,6 +8,7 @@
  * make an html table editable by the user
  *   user clicks on a cell, edits the value,
  *   then presses enter or clicks on any cell to save the new value
+ *   pressing escape returns the cell text to its orignal text
  *
  * documentation at http://gregweber.info/projects/uitableedit
  * 
@@ -21,10 +22,10 @@
  *     if mouseDown returns false, cell will not become editable
  *   dataVerify : called in context of the cell,
  *     if dataVerify returns false, cell will stay in editable state
- *     if dataVerify returns a value, that value will replace the cell's value
- *     arguments are cell's value, original text, event
- * editDone invoked on completion
- *   arguments are cell's new value, original text
+ *     if dataVerify returns text, that text will replace the cell's text
+ *     arguments are the cell's text, original text, event, jquery object for the cell
+ *   editDone : invoked on completion
+ *     arguments: td cell's new text, original text, event, and jquery element for the td cell
 */
 jQuery.uiTableEdit = function(jq, options){
   function unbind(){
@@ -45,18 +46,28 @@ jQuery.uiTableEdit = function(jq, options){
   }
   function td_edit(){
     var td = jQuery(this);
+
     function restore(e){
       var val = td.find(':text').attr('value')
       if( options.dataVerify ){
-        var value = options.dataVerify.call(this, val, orig_text, e);
+        var value = options.dataVerify.call(this, val, orig_text, e, td);
         if( value == false ){ return false; }
         if( value != null && value != undefined ) val = value;
       }
       td.html( "" );
       td.text( val );
-      if( options.editDone ) options.editDone(val,orig_text)
+      if( options.editDone ) options.editDone(val,orig_text,e,td)
       bind_mouse_down( td_edit_wrapper );
     }
+
+    function checkEscape(e){
+      if (e.keyCode === 27) {
+        td.html( "" );
+        td.text( orig_text );
+        bind_mouse_down( td_edit );
+      }
+    }
+
     var orig_text = td.text();
     var w = td.width();
     var h = td.height();
@@ -65,12 +76,24 @@ jQuery.uiTableEdit = function(jq, options){
       '<input type="text" name="td_edit" value="' +
     td.text() + '"' + ' style="margin:0px;padding:0px;border:0px;width: ' +
       w  + 'px;">' + '</input></form>' )
-      .find('form').submit( restore ).mousedown(restore)
+      .find('form').submit( restore ).mousedown(restore).blur(restore).keypress(checkEscape);
+
+    function focus_text(){
+      td.find('input:text').mousedown(function(e){
+        e.stopPropagation();
+        e.target.focus();
+      }).get(0).focus()
+    }
 
     // focus bug (seen in FireFox) fixed by small delay
-    function focus_text(){ td.find('input:text').get(0).focus() }
-    bind_mouse_down( restore );
     setTimeout(focus_text, 50);
+
+    /* TODO: investigate removing bind_mouse_down
+     I also got rid of bind_mouse_down(restore),
+     because now that you can refocus on fields that have been blurred,
+     you can have multiple edits going simultaneously
+    */
+    bind_mouse_down( restore );
   }
 
   var td_edit_wrapper = !options.mouseDown ? td_edit : function(){
