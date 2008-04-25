@@ -51,8 +51,8 @@ jQuery.uiTableEdit = function(jq, options){
       var val = td.find(':text').attr('value')
       if( options.dataVerify ){
         var value = options.dataVerify.call(this, val, orig_text, e, td);
-        if( value == false ){ return false; }
-        if( value != null && value != undefined ) val = value;
+        if( value === false ){ return false; }
+        if( value !== null && value !== undefined ) val = value;
       }
       td.html( "" );
       td.text( val );
@@ -76,14 +76,9 @@ jQuery.uiTableEdit = function(jq, options){
       '<input type="text" name="td_edit" value="' +
     td.text() + '"' + ' style="margin:0px;padding:0px;border:0px;width: ' +
       w  + 'px;">' + '</input></form>' )
-      .find('form').submit( restore ).mousedown(restore).blur(restore).keypress(checkEscape);
+      .find('form').submit( restore ).mousedown( restore ).blur( restore ).keypress( checkEscape );
 
-    function focus_text(){
-      td.find('input:text').mousedown(function(e){
-        e.stopPropagation();
-        e.target.focus();
-      }).get(0).focus()
-    }
+    function focus_text(){ td.find('input:text').get(0).focus() }
 
     // focus bug (seen in FireFox) fixed by small delay
     setTimeout(focus_text, 50);
