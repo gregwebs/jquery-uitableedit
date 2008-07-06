@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2008 Greg Weber greg at gregweber.info
- * Dual licensed under the MIT and GPL licenses:
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
+ * Dual licensed under the MIT and GPL licenses
  *
  * jquery plugin
  * make an html table editable by the user
@@ -64,7 +62,7 @@ jQuery.uiTableEdit = function(jq, options){
       if (e.keyCode === 27) {
         td.html( "" );
         td.text( orig_text );
-        bind_mouse_down( td_edit );
+        bind_mouse_down( td_edit_wrapper );
       }
     }
 

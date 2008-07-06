@@ -1,3 +1,6 @@
+v 0.4
+  fix always use td_edit_wrapper in bind_mouse_down (Thanks, Adam)
+
 v 0.3
   Thanks a ton to Adam J. Sontag
   - fix for window blurring, and some other suggested improvements
