@@ -36,8 +36,7 @@ end
 
 desc "run test"
 task :test do
-  test_files = Dir[ 'test/*_spec.html' ].join(' ')
-  run( "#{ENV['BROWSER'] || 'konqueror'} #{test_files}" ) do |r,s|
+  run( "#{ENV['BROWSER'] || 'konqueror'} test/suite.html" ) do |r,s|
     run( "#{SAFARI} #{test_files}" )
   end
 end

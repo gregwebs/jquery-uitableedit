@@ -1,0 +1,38 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<title>Screw.Unit results</title>
+<link rel="stylesheet" type="text/css" href="screw.css" />
+<script type="text/javascript" src="jquery-1.2.3.js"></script>
+<script type="text/javascript" src="screw.unit.js"></script>
+<script type="text/javascript" src="../jquery.uitableedit.js"></script>
+<script type="text/javascript" src="ui_table_edit_spec.js"></script>
+
+<script type="text/javascript">// <![CDATA[
+$(function(){ $('#specloadfailure').hide(); })
+// ]]></script>
+</head>
+
+<body>
+  <div id="specloadfailure">
+    <p> <h1> Error running specs !!!! </h1> <h3> most likely a syntax error </h3> </p>
+    <table id="pretesttable" style="display:none;">
+      <thead id="pretesthead">
+        <tr id="preheadrow"> <th>foo</th><th>bar</th> </tr>
+      </thead>
+      <tbody> <tr id="pretestrow1"> <td>foo</td><td>bar</td> </tr> </tbody>
+    </table>
+
+    <table id="testtable">
+      <thead id="testhead">
+        <tr id="headrow"> <th>sea</th><th>land</th> </tr>
+      </thead>
+      <tbody>
+        <tr id="testrow1"> <td>turtle</td><td>dog</td> </tr>
+        <tr id="testrow2"> <td>whale</td><td>monkey</td> </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
