@@ -9,7 +9,6 @@ Screw.Unit(function() {
   describe('uiTableEdit', function() {
     var  t = $('#testtable')
     var td = t.find("tbody > tr:first > td:first")
-    before(function(){ });
     
     after(function(){
       expect($.uiTableEdit(t, {off : true})).to(equal,t)
@@ -20,17 +19,12 @@ Screw.Unit(function() {
     it("should call callbacks", function(){
       expect($.uiTableEdit(t, {
         dataVerify : function(){
-          //$.log("verify")
-          //$.log(this)
           expect( $(this).find(':text').val() ).to(equal, "turtle")
-          //$.log("verify")
         },
         mouseDown : function(){
-          //$.log("down")
           expect( $(this).text() ).to(equal, "turtle")
         },
         editDone : function(a,b){
-          //$.log("done")
           expect(a).to(equal, b)
         }
       })).to(equal, t)
