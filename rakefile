@@ -1,23 +1,6 @@
+require 'tasks/helpers'
 SAFARI = '/Applications/Safari.app/Contents/MacOS/Safari'
-def exit_msg(msg, code=1)
-  puts msg
-  exit(code)
-end
-def run command
-  res = `#{command}`
-  stat = $?.exitstatus 
-  if stat != 0
-    if block_given?
-      (return (yield res, stat))
-    else
-      exit_msg res, stat
-    end
-  end
-  res
-end
-def out command
-  (puts (run command))
-end
+JQUERY_PROJECT = 'uiTableEdit'
 
 desc "mirror to jquery svn repository"
 task :mirror do
@@ -36,7 +19,6 @@ end
 
 desc "run test"
 task :test do
-  run( "#{ENV['BROWSER'] || 'konqueror'} test/suite.html" ) do |r,s|
+  system("#{ENV['BROWSER'] || 'konqueror'} test/suite.html") || 
     run( "#{SAFARI} #{test_files}" )
-  end
 end
