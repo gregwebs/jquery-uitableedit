@@ -1,0 +1,39 @@
+uiTableEdit
+- jquery plugin for making tables user editable
+
+user clicks on a cell, edits the value, then presses enter or clicks on any cell to save the new value
+usage
+
+              var t = $('table')
+              var options = {}
+              $.uiTableEdit( t, options ) // returns t
+
+download
+http://plugins.jquery.com/project/uiTableEdit
+
+source code
+http://github.com/gregwebs/jquery-uitableedit
+
+documentation
+http://projects.gregweber.info/uitableedit.html
+
+author and license
+copyright Greg Weber dual licensed under GPL and MIT
+overview
+            
+
+options :
+
+    * off : turns off table editing
+    * find : defaults to tbody > tr > td
+    * mousedown : callback on mouseDown event
+      called in context of the table cell
+      if mousedown returns false, cell will not become editable
+    * dataVerify : callback after cell has been changed
+      called in context of the cell,
+      if dataVerify returns false, cell will stay in editable state
+      if dataVerify returns a value, that value will replace the cell's value
+      arguments are cell's value, original text, event
+    * editDone : invoked on completion
+      arguments are cell's new value, original text
+
