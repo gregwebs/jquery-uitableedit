@@ -1,5 +1,6 @@
 uiTableEdit
 - jquery plugin for making tables user editable
+- simple, but you may be better of using one of the more generic editable plugins and applying it to a table
 
 user clicks on a cell, edits the value, then presses enter or clicks on any cell to save the new value
 usage
@@ -20,7 +21,6 @@ http://projects.gregweber.info/uitableedit.html
 author and license
 copyright Greg Weber dual licensed under GPL and MIT
 overview
-            
 
 options :
 
