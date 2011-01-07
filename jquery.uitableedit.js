@@ -54,6 +54,7 @@ jQuery.uiTableEdit = function(jq, options){
       }
       td.html( "" );
       td.text( val );
+      td.css( orig_css );
       if( options.editDone ) options.editDone(val,orig_text,e,td)
       bind_mouse_down( td_edit_wrapper );
     }
@@ -62,14 +63,26 @@ jQuery.uiTableEdit = function(jq, options){
       if (e.keyCode === 27) {
         td.html( "" );
         td.text( orig_text );
+        // gmiranda: restore style
+        td.css( orig_css );
         bind_mouse_down( td_edit_wrapper );
       }
     }
 
     var orig_text = td.text();
+    // gmiranda <gmiranda@lsi.upc.edu> {: save the original style, too.
     var w = td.width();
     var h = td.height();
-    td.css({width: w + "px", height: h + "px", padding: "0", margin: "0"});
+    // I keep the new style in this object to copy the keys that we need to
+    // restore later on.
+    var new_css = {width: w + "px", height: h + "px", padding: "0", margin: "0"};
+    var orig_css = new Object();
+    for( var propertyName in new_css ){
+      var value = td.css( propertyName );
+      orig_css[ propertyName ] = value;
+    }
+    td.css( new_css );
+    // }gmiranda
     td.html( '<form name="td-editor" action="javascript:void(0);">' +
       '<input type="text" name="td_edit" value="' +
     td.text() + '"' + ' style="margin:0px;padding:0px;border:0px;width: ' +
