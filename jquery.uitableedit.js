@@ -48,12 +48,11 @@ jQuery.uiTableEdit = function(jq, options){
     function restore(e){
       var val = td.find(':text').attr('value')
       if( options.dataVerify ){
-        var value = options.dataVerify.call(this, val, orig_text, e, td);
+        var value = options.dataVerify.call(td, val, orig_text, e);
         if( value === false ){ return false; }
         if( value !== null && value !== undefined ) val = value;
       }
-      td.html( "" );
-      td.text( val );
+      td.empty().text( val );
       td.css( orig_css );
       if( options.editDone ) options.editDone(val,orig_text,e,td)
       bind_mouse_down( td_edit_wrapper );
@@ -61,10 +60,37 @@ jQuery.uiTableEdit = function(jq, options){
 
     function checkEscape(e){
       if (e.keyCode === 27) {
-        td.html( "" );
-        td.text( orig_text );
+        td.empty().text( orig_text );
         // gmiranda: restore style
         td.css( orig_css );
+      if (e.keyCode === 9 && !e.shiftKey) {
+		restore();
+        var next = td.nextAll('.editable:visible:first');
+		if (next.length>0) {
+			next.trigger('mousedown');
+		}
+		// check for next in the next row
+		else {
+			next = td.parent().next().children('td.editable:visible:first');
+			if (next.length>0) {
+				next.trigger('mousedown');
+			}
+		}
+      }
+      else if (e.shiftKey) {
+		restore();
+        var prev = td.prevAll('.editable:visible:first');
+		if (prev.length>0) {
+			prev.trigger('mousedown');
+		}
+		// check for next in the prev row
+		else {
+			prev = td.parent().prev().children('td.editable:visible:last');
+			if (prev.length>0) {
+				prev.trigger('mousedown');
+			}
+		}
+      }
         bind_mouse_down( td_edit_wrapper );
       }
     }
@@ -87,7 +113,8 @@ jQuery.uiTableEdit = function(jq, options){
       '<input type="text" name="td_edit" value="' +
     td.text() + '"' + ' style="margin:0px;padding:0px;border:0px;width: ' +
       w  + 'px;">' + '</input></form>' )
-      .find('form').submit( restore ).mousedown( restore ).blur( restore ).keypress( checkEscape );
+      .find('form').submit( restore ).mousedown(restore).blur( restore ).keypress( checkEscape );
+	$('input', td).blur( restore );
 
     function focus_text(){ td.find('input:text').get(0).focus() }
 
