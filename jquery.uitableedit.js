@@ -24,6 +24,10 @@
  *     arguments are the cell's text, original text, event, jquery object for the cell
  *   editDone : invoked on completion
  *     arguments: td cell's new text, original text, event, and jquery element for the td cell
+ *
+ *   changes DTU: introduced classes
+ *   td.uiTableEdit_noEdit  This entry will not be editable
+ *   input.uiTableEdit_editable The input class to mark it current editable
 */
 jQuery.uiTableEdit = function(jq, options){
   function unbind(){
@@ -32,7 +36,7 @@ jQuery.uiTableEdit = function(jq, options){
   options = options || {}
   options.find = options.find || 'tbody > tr > td'
   if( options.off ){
-    unbind().find('form').each( function(){ var f = $(this);
+    unbind().find('form').each( function(){var f = $(this);
       f.parents("td:first").text( f.find(':text').attr('value') );
       f.remove();
     });
@@ -44,17 +48,17 @@ jQuery.uiTableEdit = function(jq, options){
   }
   function td_edit(){
     var td = jQuery(this);
+    if (td.hasClass('uiTableEdit_noEdit'))  return; // do nothing
 
     function restore(e){
       var val = td.find(':text').attr('value')
       if( options.dataVerify ){
         var value = options.dataVerify.call(this, val, orig_text, e, td);
-        if( value === false ){ return false; }
+        if( value === false ){return false;}
         if( value !== null && value !== undefined ) val = value;
       }
       td.html( "" );
       td.text( val );
-      td.css( orig_css );
       if( options.editDone ) options.editDone(val,orig_text,e,td)
       bind_mouse_down( td_edit_wrapper );
     }
@@ -63,33 +67,21 @@ jQuery.uiTableEdit = function(jq, options){
       if (e.keyCode === 27) {
         td.html( "" );
         td.text( orig_text );
-        // gmiranda: restore style
-        td.css( orig_css );
         bind_mouse_down( td_edit_wrapper );
       }
     }
 
     var orig_text = td.text();
-    // gmiranda <gmiranda@lsi.upc.edu> {: save the original style, too.
     var w = td.width();
     var h = td.height();
-    // I keep the new style in this object to copy the keys that we need to
-    // restore later on.
-    var new_css = {width: w + "px", height: h + "px", padding: "0", margin: "0"};
-    var orig_css = new Object();
-    for( var propertyName in new_css ){
-      var value = td.css( propertyName );
-      orig_css[ propertyName ] = value;
-    }
-    td.css( new_css );
-    // }gmiranda
+    td.css({width: w + "px", height: h + "px", padding: "0", margin: "0"});
     td.html( '<form name="td-editor" action="javascript:void(0);">' +
-      '<input type="text" name="td_edit" value="' +
+      '<input type="text" name="td_edit" class="uiTableEdit_editable" value="' +
     td.text() + '"' + ' style="margin:0px;padding:0px;border:0px;width: ' +
       w  + 'px;">' + '</input></form>' )
       .find('form').submit( restore ).mousedown( restore ).blur( restore ).keypress( checkEscape );
 
-    function focus_text(){ td.find('input:text').get(0).focus() }
+    function focus_text(){td.find('input:text').get(0).focus()}
 
     // focus bug (seen in FireFox) fixed by small delay
     setTimeout(focus_text, 50);
